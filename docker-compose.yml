@@ -1,26 +1,41 @@
 version: '3.8'
 services:
-  apache:
-    container_name: iim_apache
-    hostname: iim_apache
-    # image: 'httpd:2.4' (search)
-    build: ./containers/apache
+  # apache:
+  #   container_name: iim_apache
+  #   hostname: iim_apache
+  #   # image: 'httpd:2.4' (search)
+  #   build: ./containers/apache
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   networks:
+  #     - 'iim-lamp'
+  #     - 'iim-lemp'
+  #   volumes:
+  #       - './src/:/usr/local/apache2/htdocs'
+  #       - './config/:/usr/local/apache2/conf/extra'
+  nginx:
+    container_name: iim_nginx
+    hostname: iim_nginx
+    image: nginx:1.19
     ports:
-      - 81:80
-      - 443:443
+     - 81:80
+    environment:
+     - NGINX_PORT=80
     networks:
-      - 'iim-lamp'
+      - iim-lemp
     volumes:
-        - './src/:/usr/local/apache2/htdocs'
-        - './config/:/usr/local/apache2/conf/extra'
+     - ./src/:/var/www
+     - ./config-nginx/:/etc/nginx/conf.d
   php:
     container_name: iim_php
     hostname: iim_php
     build: ./containers/php
     networks: 
       - 'iim-lamp'
+      - 'iim-lemp'
     volumes:
-        - './src/:/var/www/html'
+        - './src/:/var/www'
   mysql:
     container_name: iim_mysql
     hostname: iim_mysql
@@ -29,8 +44,11 @@ services:
       - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=development
     networks: 
      - 'iim-lamp'
+     - 'iim-lemp'
 
 networks:
     iim-lamp: {}
+    iim-lemp: {}
