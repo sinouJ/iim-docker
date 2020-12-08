@@ -19,7 +19,8 @@ services:
     hostname: iim_nginx
     image: nginx:1.19
     ports:
-     - 81:80
+     - 80:80
+    #  - 443:443
     environment:
      - NGINX_PORT=80
     networks:
@@ -32,10 +33,10 @@ services:
     hostname: iim_php
     build: ./containers/php
     networks: 
-      - 'iim-lamp'
-      - 'iim-lemp'
+      - iim-lamp
+      - iim-lemp
     volumes:
-        - './src/:/var/www'
+        - ./src/:/var/www
   mysql:
     container_name: iim_mysql
     hostname: iim_mysql
@@ -46,9 +47,9 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=development
     networks: 
-     - 'iim-lamp'
-     - 'iim-lemp'
+     - iim-lamp
+     - iim-lemp
 
 networks:
-    iim-lamp: {}
-    iim-lemp: {}
+    iim-lamp: 
+    iim-lemp:
